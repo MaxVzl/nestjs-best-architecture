@@ -1,9 +1,35 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { appConfig, databaseConfig, jwtConfig, queueConfig, validationSchema } from './config';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Tenant } from './modules/tenants/entities/tenant.entity';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [
+        appConfig,
+        databaseConfig,
+        jwtConfig,
+        queueConfig
+      ],
+      validationSchema: validationSchema,
+      validationOptions: {
+        allowUnknown: true,
+        abortEarly: false,
+      }
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        ...configService.get('database.admin'),
+        entities: [Tenant],
+      }),
+      inject: [ConfigService],
+    } as TypeOrmModuleOptions),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
