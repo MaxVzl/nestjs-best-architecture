@@ -6,6 +6,9 @@ import { appConfig, databaseConfig, jwtConfig, queueConfig, validationSchema } f
 import { TenantsModule } from './modules/tenants/tenants.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Tenant } from './modules/tenants/entities/tenant.entity';
+import { UsersModule } from './modules/users/users.module';
+import { User } from './modules/users/entities/tenant.entity';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -26,11 +29,13 @@ import { Tenant } from './modules/tenants/entities/tenant.entity';
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         ...configService.get('database.admin'),
-        entities: [Tenant],
+        entities: [Tenant, User],
       }),
       inject: [ConfigService],
     } as TypeOrmModuleOptions),
     TenantsModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
