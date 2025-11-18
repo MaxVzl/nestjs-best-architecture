@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { appConfig, databaseConfig, jwtConfig, queueConfig, validationSchema } from './config';
+import { TenantsModule } from './modules/tenants/tenants.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Tenant } from './modules/tenants/entities/tenant.entity';
 
@@ -29,6 +30,7 @@ import { Tenant } from './modules/tenants/entities/tenant.entity';
       }),
       inject: [ConfigService],
     } as TypeOrmModuleOptions),
+    TenantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
