@@ -7,10 +7,12 @@ import { TenantsModule } from './modules/tenants/tenants.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Tenant } from './modules/tenants/entities/tenant.entity';
 import { UsersModule } from './modules/users/users.module';
-import { User } from './modules/users/entities/tenant.entity';
+import { User } from './modules/users/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from './common/guards/auth/auth.guard';
+import { CurrentUserInterceptor } from './common/interceptors/current-user/current-user.interceptor';
+import { RolesGuard } from './common/guards/roles/roles.guard';
 
 @Module({
   imports: [
@@ -40,6 +42,20 @@ import { AuthGuard } from './common/guards/auth/auth.guard';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: AuthGuard }],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CurrentUserInterceptor
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
+    }
+  ],
 })
 export class AppModule {}
