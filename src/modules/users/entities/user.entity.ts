@@ -1,4 +1,4 @@
-import { Role } from "src/common/enums/role.enum";
+import { Role } from "src/modules/users/enums/role.enum";
 import { Tenant } from "src/modules/tenants/entities/tenant.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 

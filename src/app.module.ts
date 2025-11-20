@@ -10,9 +10,9 @@ import { UsersModule } from './modules/users/users.module';
 import { User } from './modules/users/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthGuard } from './common/guards/auth/auth.guard';
-import { CurrentUserInterceptor } from './common/interceptors/current-user/current-user.interceptor';
-import { RolesGuard } from './common/guards/roles/roles.guard';
+import { AuthGuard } from './modules/auth/guards/auth.guard';
+import { CurrentUserInterceptor } from './modules/auth/interceptors/current-user.interceptor';
+import { RolesGuard } from './modules/users/guards/roles.guard';
 
 @Module({
   imports: [
