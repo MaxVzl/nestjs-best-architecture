@@ -13,6 +13,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { CurrentUserInterceptor } from './modules/auth/interceptors/current-user.interceptor';
 import { RolesGuard } from './modules/users/guards/roles.guard';
+import { EmailsModule } from './modules/emails/emails.module';
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { RolesGuard } from './modules/users/guards/roles.guard';
     } as TypeOrmModuleOptions),
     TenantsModule,
     UsersModule,
-    AuthModule,
+    AuthModule, 
+    EmailsModule
   ],
   controllers: [AppController],
   providers: [
