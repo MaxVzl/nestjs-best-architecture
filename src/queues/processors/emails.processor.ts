@@ -1,5 +1,19 @@
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Job } from "bullmq";
+import { render } from '@react-email/components';
+import nodemailer from 'nodemailer';
+import React from 'react';
+import { SignInEmail } from '../../emails/sign-in.email';
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp-fr.securemail.pro',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'mv@scrinfo.net',
+    pass: 'pass',
+  },
+});
 
 @Processor('emails')
 // @Processor('emails', { concurrency: 2 })
@@ -12,6 +26,18 @@ export class EmailsProcessor extends WorkerHost {
       progress = i;
       await job.updateProgress(progress);
     }
+    
+    const emailHtml = await render(React.createElement(SignInEmail, { email: job.data.email }));
+    
+    const options = {
+      from: 'SCR Info <mv@scrinfo.net>',
+      // to: job.data.email,
+      to: 'maxime.vozelle@gmail.com',
+      subject: 'hello world',
+      html: emailHtml,
+    };
+    
+    await transporter.sendMail(options);
     return {};
   }
 
