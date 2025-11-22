@@ -1,23 +1,14 @@
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Job } from "bullmq";
-import { render } from '@react-email/components';
-import nodemailer from 'nodemailer';
-import React from 'react';
-import { SignInEmail } from '../../emails/sign-in.email';
-
-const transporter = nodemailer.createTransport({
-  host: 'smtp-fr.securemail.pro',
-  port: 465,
-  secure: true,
-  auth: {
-    user: 'mv@scrinfo.net',
-    pass: 'pass',
-  },
-});
+import { EmailsService } from "../services/emails.service";
 
 @Processor('emails')
 // @Processor('emails', { concurrency: 2 })
 export class EmailsProcessor extends WorkerHost {
+  constructor(private readonly emailsService: EmailsService) {
+    super();
+  }
+
   async process(job: Job<any, any, string>): Promise<any> {
     let progress = 0;
     for (let i = 0; i < 100; i++) {
@@ -26,18 +17,9 @@ export class EmailsProcessor extends WorkerHost {
       progress = i;
       await job.updateProgress(progress);
     }
+
+    await this.emailsService.sendEmail(job.data.email);
     
-    const emailHtml = await render(React.createElement(SignInEmail, { email: job.data.email }));
-    
-    const options = {
-      from: 'SCR Info <mv@scrinfo.net>',
-      // to: job.data.email,
-      to: 'maxime.vozelle@gmail.com',
-      subject: 'hello world',
-      html: emailHtml,
-    };
-    
-    await transporter.sendMail(options);
     return {};
   }
 
@@ -51,5 +33,15 @@ export class EmailsProcessor extends WorkerHost {
   @OnWorkerEvent('completed')
   onCompleted(job: Job<any, any, string>) {
     console.log('Notification completed', job.data);
+  }
+
+  @OnWorkerEvent('failed')
+  onFailed(job: Job<any, any, string>, error: Error) {
+    console.log('Notification failed', job.data, error);
+  }
+
+  @OnWorkerEvent('error')
+  onError(job: Job<any, any, string>, error: Error) {
+    console.log('Notification error', job.data, error);
   }
 }

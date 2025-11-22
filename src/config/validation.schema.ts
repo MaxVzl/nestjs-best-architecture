@@ -37,4 +37,11 @@ export const validationSchema = Joi.object({
   TENANT_ID_SOURCE: Joi.string()
     .valid('header', 'subdomain', 'jwt')
     .default('header'),
+
+  // Email
+  EMAIL_HOST: Joi.string().required(),
+  EMAIL_PORT: Joi.number().default(587),
+  EMAIL_SECURE: Joi.boolean().default(false),
+  EMAIL_USER: Joi.string().required(),
+  EMAIL_PASS: Joi.string().required(),
 });
