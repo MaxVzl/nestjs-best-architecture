@@ -46,6 +46,16 @@ export class TenantsService {
     return tenant;
   }
 
+  async findOneByUserId(userId: string): Promise<Tenant> {
+    const tenant = await this.tenantsRepository.findOne({ where: { users: { id: userId } } });
+
+    if (!tenant) {
+      throw new NotFoundException(`Tenant avec l'utilisateur "${userId}" introuvable`);
+    }
+
+    return tenant;
+  }
+
   async update(id: string, updateTenantDto: UpdateTenantDto): Promise<Tenant> {
     const tenant = await this.findOne(id);
 

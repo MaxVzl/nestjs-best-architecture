@@ -14,6 +14,7 @@ import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { CurrentUserInterceptor } from './modules/auth/interceptors/current-user.interceptor';
 import { RolesGuard } from './modules/users/guards/roles.guard';
 import { EmailsModule } from './modules/emails/emails.module';
+import { CurrentTenantInterceptor } from './modules/auth/interceptors/current-tenant.interceptor';
 
 @Module({
   imports: [
@@ -53,6 +54,10 @@ import { EmailsModule } from './modules/emails/emails.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: CurrentUserInterceptor
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CurrentTenantInterceptor
     },
     {
       provide: APP_GUARD,

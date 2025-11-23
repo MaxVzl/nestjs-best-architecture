@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { Public } from './decorators/public.decorator';
