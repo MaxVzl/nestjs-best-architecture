@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { EmailsService } from '../emails/emails.service';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,8 +22,15 @@ export class AuthService {
 
     await this.emailsService.sendEmail(user.email);
 
+    return this.generateToken(user);
+  }
+
+  async refresh(user: User) {
+    return this.generateToken(user);
+  }
+
+  private async generateToken(user: User) {
     const payload = { sub: user.id, email: user.email, roles: user.roles };
-    
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

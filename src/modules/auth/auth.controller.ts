@@ -15,8 +15,13 @@ export class AuthController {
     return this.authService.signIn(loginDto);
   }
 
-  @Get('profile')
-  getProfile(@CurrentUser() user: User) {
+  @Get('me')
+  getMe(@CurrentUser() user: User) {
     return user;
+  }
+  
+  @Get('refresh')
+  refresh(@CurrentUser() user: User) {
+    return this.authService.refresh(user);
   }
 }
