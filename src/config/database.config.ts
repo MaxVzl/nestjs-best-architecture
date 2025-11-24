@@ -16,8 +16,8 @@ export default registerAs('database', () => ({
     logging: process.env.NODE_ENV === 'development',
     entities: [Tenant, User],
     // entities: ['dist/database/admin/entities/**/*.entity.js'],
-    // migrations: ['dist/database/admin/migrations/**/*.js'],
-    migrations: ['src/database/admin/migrations/**/*.ts'],
+    migrations: ['dist/database/admin/migrations/**/*.js'],
+    // migrations: ['src/database/admin/migrations/**/*.ts'],
   },
 
   // Base de données TENANT (template)
@@ -33,8 +33,8 @@ export default registerAs('database', () => ({
     logging: process.env.NODE_ENV === 'development',
     entities: [Profile],
     // entities: ['dist/database/tenant/entities/**/*.entity.js'],
-    // migrations: ['dist/database/tenant/migrations/**/*.js'],
-    migrations: ['src/database/tenant/migrations/**/*.ts'],
+    migrations: ['dist/database/tenant/migrations/**/*.js'],
+    // migrations: ['src/database/tenant/migrations/**/*.ts'],
   },
 
   // Pool de connexions
