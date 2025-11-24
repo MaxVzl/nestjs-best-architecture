@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
-import { EmailsProcessor } from './modules/emails-queue/emails.processor';
+import { EmailsProcessor } from './modules/emails-queue/emails-queue.processor';
 import { EmailsQueueService } from './modules/emails-queue/emails-queue.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { emailConfig, redisConfig, validationSchema } from 'src/config';

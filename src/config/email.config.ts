@@ -9,5 +9,8 @@ export default registerAs('email', () => ({
       user: process.env.EMAIL_USER || 'user',
       pass: process.env.EMAIL_PASS || 'pass',
     },
+  },
+  defaults: {
+    from: process.env.EMAIL_FROM || 'no-reply@example.com',
   }
 }));

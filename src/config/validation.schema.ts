@@ -44,4 +44,5 @@ export const validationSchema = Joi.object({
   EMAIL_SECURE: Joi.boolean().default(false),
   EMAIL_USER: Joi.string().required(),
   EMAIL_PASS: Joi.string().required(),
+  EMAIL_FROM: Joi.string().required(),
 });

@@ -10,6 +10,8 @@ import {
   Section,
   Tailwind,
   Text,
+  Row,
+  Column,
 } from '@react-email/components';
 import tailwindConfig from './tailwind.config';
 
@@ -19,54 +21,148 @@ const TailwindWrapper = Tailwind as React.ComponentType<
 
 interface SignInEmailProps {
   email: string;
+  loginDate?: string;
+  loginTime?: string;
+  ipAddress?: string;
+  userAgent?: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://www.scrinfo.net/wp-content/themes/scr/img/scr.svg`
-  : '';
+const logoUrl = process.env.EMAIL_LOGO_URL || 
+  'https://www.scrinfo.net/wp-content/themes/scr/img/scr.svg';
 
 export const SignInEmail = ({
   email,
+  loginDate = new Date().toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }),
+  loginTime = new Date().toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }),
+  ipAddress,
+  userAgent,
 }: SignInEmailProps) => (
   <Html>
     <Head />
     <TailwindWrapper config={tailwindConfig}>
-      <Body className="bg-white font-koala">
+      <Body className="bg-gray-50 font-koala">
         <Preview>
-          The sales intelligence platform that helps you uncover qualified
-          leads.
+          Nouvelle connexion détectée sur votre compte SCR Info
         </Preview>
-        <Container className="mx-auto py-5 pb-12">
+        <Container className="mx-auto bg-white py-8 px-6 max-w-[600px]">
           <Img
-            src={`${baseUrl}/scr.svg`}
+            src={logoUrl}
             width="170"
             height="50"
             alt="SCR Info"
-            className="mx-auto"
+            className="mx-auto mb-8"
           />
-          <Text className="text-[16px] leading-[26px]">
-            Hi {email},
+          
+          <Text className="text-[24px] font-semibold text-gray-900 mb-4">
+            Nouvelle connexion détectée
           </Text>
-          <Text className="text-[16px] leading-[26px]">
-            Welcome to SCR Info, the sales intelligence platform that helps you
-            uncover qualified leads and close deals faster.
+          
+          <Text className="text-[16px] leading-[26px] text-gray-700 mb-6">
+            Bonjour,
           </Text>
-          <Section className="text-center">
+          
+          <Text className="text-[16px] leading-[26px] text-gray-700 mb-6">
+            Nous avons détecté une nouvelle connexion à votre compte SCR Info.
+            Si vous êtes à l'origine de cette connexion, vous pouvez ignorer cet email.
+          </Text>
+
+          <Section className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+            <Text className="text-[14px] font-semibold text-gray-900 mb-4">
+              Détails de la connexion :
+            </Text>
+            
+            <Row className="mb-3">
+              <Column>
+                <Text className="text-[14px] text-gray-600 m-0">Date :</Text>
+              </Column>
+              <Column>
+                <Text className="text-[14px] text-gray-900 font-medium m-0">
+                  {loginDate} à {loginTime}
+                </Text>
+              </Column>
+            </Row>
+            
+            {ipAddress && (
+              <Row className="mb-3">
+                <Column>
+                  <Text className="text-[14px] text-gray-600 m-0">Adresse IP :</Text>
+                </Column>
+                <Column>
+                  <Text className="text-[14px] text-gray-900 font-medium m-0">
+                    {ipAddress}
+                  </Text>
+                </Column>
+              </Row>
+            )}
+            
+            {userAgent && (
+              <Row className="mb-3">
+                <Column>
+                  <Text className="text-[14px] text-gray-600 m-0">Appareil :</Text>
+                </Column>
+                <Column>
+                  <Text className="text-[14px] text-gray-900 font-medium m-0">
+                    {userAgent}
+                  </Text>
+                </Column>
+              </Row>
+            )}
+            
+            <Row>
+              <Column>
+                <Text className="text-[14px] text-gray-600 m-0">Compte :</Text>
+              </Column>
+              <Column>
+                <Text className="text-[14px] text-gray-900 font-medium m-0">
+                  {email}
+                </Text>
+              </Column>
+            </Row>
+          </Section>
+
+          <Section className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <Text className="text-[14px] text-red-800 m-0">
+              <strong>Important :</strong> Si vous n'êtes pas à l'origine de cette connexion,
+              veuillez changer immédiatement votre mot de passe et nous contacter.
+            </Text>
+          </Section>
+
+          <Section className="text-center mb-6">
             <Button
-              className="bg-[#5F51E8] rounded-[3px] text-white text-[16px] no-underline text-center block p-3"
+              className="bg-[#5F51E8] rounded-md text-white text-[16px] font-medium no-underline text-center px-6 py-3 inline-block"
               href="https://www.scrinfo.net"
             >
-              Get started
+              Accéder à mon compte
             </Button>
           </Section>
-          <Text className="text-[16px] leading-[26px]">
-            Best,
-            <br />
-            The SCR Info team
+
+          <Hr className="border-gray-200 my-6" />
+          
+          <Text className="text-[14px] text-gray-600 leading-[22px] mb-4">
+            Pour des raisons de sécurité, nous vous informons de toutes les connexions
+            à votre compte. Si vous avez des questions ou des préoccupations, n'hésitez
+            pas à nous contacter.
           </Text>
-          <Hr className="border-[#cccccc] my-5" />
-          <Text className="text-[#8898aa] text-[12px]">
+          
+          <Text className="text-[16px] leading-[26px] text-gray-700">
+            Cordialement,
+            <br />
+            <strong>L'équipe SCR Info</strong>
+          </Text>
+          
+          <Hr className="border-gray-200 my-6" />
+          
+          <Text className="text-[12px] text-gray-500 text-center">
             SCR Info, LLC
+            <br />
+            Cet email a été envoyé automatiquement, merci de ne pas y répondre.
           </Text>
         </Container>
       </Body>
@@ -76,6 +172,10 @@ export const SignInEmail = ({
 
 SignInEmail.PreviewProps = {
   email: 'alan@scrinfo.net',
+  loginDate: '15 janvier 2024',
+  loginTime: '14:30',
+  ipAddress: '192.168.1.1',
+  userAgent: 'Chrome sur Windows',
 } as SignInEmailProps;
 
 export default SignInEmail;

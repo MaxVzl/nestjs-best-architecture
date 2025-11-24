@@ -13,14 +13,14 @@ export class AuthService {
     private readonly emailsService: EmailsService
   ) {}
 
-  async signIn(loginDto: SignInDto) {
+  async signIn(loginDto: SignInDto, request: Request) {
     const user = await this.usersService.findOneByEmail(loginDto.email);
 
     if (user.password !== loginDto.password) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    await this.emailsService.sendEmail(user.email);
+    await this.emailsService.sendSignInEmail(user, request);
 
     return this.generateToken(user);
   }

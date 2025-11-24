@@ -1,6 +1,7 @@
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Job } from "bullmq";
 import { EmailsQueueService } from './emails-queue.service';
+import { SignInEmailDto } from "src/workers/modules/emails-queue/dto/sign-in-email.dto";
 
 @Processor('emails')
 // @Processor('emails', { concurrency: 2 })
@@ -9,7 +10,7 @@ export class EmailsProcessor extends WorkerHost {
     super();
   }
 
-  async process(job: Job<any, any, string>): Promise<any> {
+  async process(job: Job<SignInEmailDto, any, string>): Promise<any> {
     let progress = 0;
     for (let i = 0; i < 100; i++) {
       // console.log('Processing notification', i);
@@ -18,7 +19,11 @@ export class EmailsProcessor extends WorkerHost {
       await job.updateProgress(progress);
     }
 
-    await this.emailsQueueService.send(job.data.email);
+    if (job.name === 'sign-in') {
+      await this.emailsQueueService.sendSignInEmail(job.data);
+    } else {
+      throw new Error(`Invalid job name: ${job.name}`);
+    }
     
     return {};
   }
