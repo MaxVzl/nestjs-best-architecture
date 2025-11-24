@@ -18,8 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "queues:prod": "node dist/queues/queues",
-    "email:dev": "email dev --dir src/emails"
+    "workers:prod": "node dist/workers/workers",
+    "email:dev": "email dev --dir src/workers/modules/emails-queue/emails"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",

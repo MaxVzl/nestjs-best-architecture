@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import nodemailer from 'nodemailer';
 import { render } from '@react-email/components';
 import React from 'react';
-import { SignInEmail } from '../../emails/sign-in.email';
+import { SignInEmail } from './emails/sign-in.email';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
-export class EmailsService {
+export class EmailsQueueService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendEmail(email: string) {
+  async send(email: string) {
     const emailHtml = await render(React.createElement(SignInEmail, { email }));
 
     await this.mailerService.sendMail({

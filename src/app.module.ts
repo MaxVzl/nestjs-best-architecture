@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { appConfig, databaseConfig, jwtConfig, queueConfig, validationSchema } from './config';
+import { appConfig, databaseConfig, jwtConfig, redisConfig, validationSchema } from './config';
 import { TenantsModule } from './modules/tenants/tenants.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Tenant } from './modules/tenants/entities/tenant.entity';
@@ -15,6 +15,7 @@ import { CurrentUserInterceptor } from './modules/auth/interceptors/current-user
 import { RolesGuard } from './modules/users/guards/roles.guard';
 import { EmailsModule } from './modules/emails/emails.module';
 import { CurrentTenantInterceptor } from './modules/auth/interceptors/current-tenant.interceptor';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -24,13 +25,21 @@ import { CurrentTenantInterceptor } from './modules/auth/interceptors/current-te
         appConfig,
         databaseConfig,
         jwtConfig,
-        queueConfig
+        redisConfig
       ],
       validationSchema: validationSchema,
       validationOptions: {
         allowUnknown: true,
         abortEarly: false,
       }
+    }),
+    BullModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          ...configService.get('redis')
+        }
+      }),
+      inject: [ConfigService]
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({

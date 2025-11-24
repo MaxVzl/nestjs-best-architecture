@@ -1,11 +1,11 @@
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Job } from "bullmq";
-import { EmailsService } from "../services/emails.service";
+import { EmailsQueueService } from './emails-queue.service';
 
 @Processor('emails')
 // @Processor('emails', { concurrency: 2 })
 export class EmailsProcessor extends WorkerHost {
-  constructor(private readonly emailsService: EmailsService) {
+  constructor(private readonly emailsQueueService: EmailsQueueService) {
     super();
   }
 
@@ -18,7 +18,7 @@ export class EmailsProcessor extends WorkerHost {
       await job.updateProgress(progress);
     }
 
-    await this.emailsService.sendEmail(job.data.email);
+    await this.emailsQueueService.send(job.data.email);
     
     return {};
   }

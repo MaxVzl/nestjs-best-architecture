@@ -6,12 +6,8 @@ import { EmailsEvents } from './emails.events';
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: 'emails',
-      connection: {
-        host: 'localhost',
-        port: 6379
-      }
-    })
+      name: 'emails'
+    }),
   ],
   providers: [EmailsService, EmailsEvents],
   exports: [EmailsService]
