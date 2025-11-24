@@ -1,4 +1,7 @@
 import { registerAs } from "@nestjs/config";
+import { Profile } from "src/modules/profiles/entities/profile.entity";
+import { Tenant } from "src/modules/tenants/entities/tenant.entity";
+import { User } from "src/modules/users/entities/user.entity";
 
 export default registerAs('database', () => ({
   // Base de données ADMIN (centrale)
@@ -11,8 +14,10 @@ export default registerAs('database', () => ({
     database: process.env.ADMIN_DB_NAME || 'admin_db',
     synchronize: process.env.NODE_ENV === 'development',
     logging: process.env.NODE_ENV === 'development',
+    entities: [Tenant, User],
     // entities: ['dist/database/admin/entities/**/*.entity.js'],
-    migrations: ['dist/database/admin/migrations/**/*.js'],
+    // migrations: ['dist/database/admin/migrations/**/*.js'],
+    migrations: ['src/database/admin/migrations/**/*.ts'],
   },
 
   // Base de données TENANT (template)
@@ -26,8 +31,10 @@ export default registerAs('database', () => ({
     databasePrefix: process.env.TENANT_DB_PREFIX || 'tenant_',
     synchronize: process.env.NODE_ENV === 'development',
     logging: process.env.NODE_ENV === 'development',
+    entities: [Profile],
     // entities: ['dist/database/tenant/entities/**/*.entity.js'],
-    migrations: ['dist/database/tenant/migrations/**/*.js'],
+    // migrations: ['dist/database/tenant/migrations/**/*.js'],
+    migrations: ['src/database/tenant/migrations/**/*.ts'],
   },
 
   // Pool de connexions

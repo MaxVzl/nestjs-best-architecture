@@ -8,12 +8,14 @@ import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { Tenant } from './entities/tenant.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TenantDbService } from '../tenant-db/tenant-db.service';
 
 @Injectable()
 export class TenantsService {
   constructor(
     @InjectRepository(Tenant)
     private readonly tenantsRepository: Repository<Tenant>,
+    private readonly tenantDbService: TenantDbService,
   ) {}
 
   async create(createTenantDto: CreateTenantDto): Promise<Tenant> {
@@ -29,7 +31,11 @@ export class TenantsService {
     }
 
     const tenant = this.tenantsRepository.create(createTenantDto);
-    return await this.tenantsRepository.save(tenant);
+    await this.tenantsRepository.save(tenant);
+    
+    await this.tenantDbService.createDataSource(tenant);
+    
+    return tenant;
   }
 
   async findAll(): Promise<Tenant[]> {

@@ -16,6 +16,8 @@ import { RolesGuard } from './modules/users/guards/roles.guard';
 import { EmailsModule } from './modules/emails/emails.module';
 import { CurrentTenantInterceptor } from './modules/auth/interceptors/current-tenant.interceptor';
 import { BullModule } from '@nestjs/bullmq';
+import { ProfilesModule } from './modules/profiles/profiles.module';
+import { TenantDbModule } from './modules/tenant-db/tenant-db.module';
 
 @Module({
   imports: [
@@ -42,16 +44,13 @@ import { BullModule } from '@nestjs/bullmq';
       inject: [ConfigService]
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
-        ...configService.get('database.admin'),
-        entities: [Tenant, User],
-      }),
+      useFactory: (configService: ConfigService) => configService.get('database.admin'),
       inject: [ConfigService],
     } as TypeOrmModuleOptions),
     TenantsModule,
     UsersModule,
     AuthModule, 
-    EmailsModule
+    EmailsModule, ProfilesModule, TenantDbModule
   ],
   controllers: [AppController],
   providers: [
