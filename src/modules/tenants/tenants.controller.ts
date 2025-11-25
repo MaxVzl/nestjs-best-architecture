@@ -2,8 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TenantsService } from './tenants.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
+import { Roles } from '../users/decorators/roles.decorator';
+import { Role } from '../users/enums/role.enum';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Controller('tenants')
+@Roles(Role.Admin)
 export class TenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
 
@@ -30,5 +34,15 @@ export class TenantsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.tenantsService.remove(id);
+  }
+
+  @Post(':id/users')
+  createUser(@Param('id') id: string, @Body() createUserDto: CreateUserDto) {
+    return this.tenantsService.createUser(id, createUserDto);
+  }
+
+  @Get(':id/users')
+  findAllUsers(@Param('id') id: string) {
+    return this.tenantsService.findAllUsers(id);
   }
 }

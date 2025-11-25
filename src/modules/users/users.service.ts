@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -9,6 +10,24 @@ export class UsersService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
   ) {}
+
+  async createForTenant(tenantId: string, createUserDto: CreateUserDto): Promise<User> {
+    const existingUser = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException(
+        `Un utilisateur avec l'email "${createUserDto.email}" existe déjà`,
+      );
+    }
+
+    const user = this.usersRepository.create({
+      ...createUserDto,
+      tenant: { id: tenantId },
+    });
+    return await this.usersRepository.save(user);
+  }
 
   async findAll(): Promise<User[]> {
     return await this.usersRepository.find();
@@ -28,9 +47,13 @@ export class UsersService {
     const user = await this.usersRepository.findOne({ where: { email } });
 
     if (!user) {
-      throw new NotFoundException(`User avec l'email "${email}" introuvable`);
+      throw new NotFoundException(`Utilisateur avec l'email "${email}" introuvable`);
     }
 
     return user;
+  }
+
+  async findAllByTenantId(tenantId: string): Promise<User[]> {
+    return await this.usersRepository.find({ where: { tenant: { id: tenantId } } });
   }
 }

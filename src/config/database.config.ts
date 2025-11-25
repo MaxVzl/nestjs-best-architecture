@@ -12,12 +12,10 @@ export default registerAs('database', () => ({
     username: process.env.ADMIN_DB_USERNAME || 'admin',
     password: process.env.ADMIN_DB_PASSWORD || 'password',
     database: process.env.ADMIN_DB_NAME || 'admin_db',
-    synchronize: process.env.NODE_ENV === 'development',
+    synchronize: false,
     logging: process.env.NODE_ENV === 'development',
     entities: [Tenant, User],
-    // entities: ['dist/database/admin/entities/**/*.entity.js'],
     migrations: ['dist/database/admin/migrations/**/*.js'],
-    // migrations: ['src/database/admin/migrations/**/*.ts'],
   },
 
   // Base de données TENANT (template)
@@ -29,12 +27,10 @@ export default registerAs('database', () => ({
     password: process.env.TENANT_DB_PASSWORD || 'password',
     // Le nom de la DB sera dynamique par tenant
     databasePrefix: process.env.TENANT_DB_PREFIX || 'tenant_',
-    synchronize: process.env.NODE_ENV === 'development',
+    synchronize: false,
     logging: process.env.NODE_ENV === 'development',
     entities: [Profile],
-    // entities: ['dist/database/tenant/entities/**/*.entity.js'],
     migrations: ['dist/database/tenant/migrations/**/*.js'],
-    // migrations: ['src/database/tenant/migrations/**/*.ts'],
   },
 
   // Pool de connexions

@@ -9,6 +9,9 @@ import { Tenant } from './entities/tenant.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TenantDbService } from '../tenant-db/tenant-db.service';
+import { User } from '../users/entities/user.entity';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class TenantsService {
@@ -16,6 +19,7 @@ export class TenantsService {
     @InjectRepository(Tenant)
     private readonly tenantsRepository: Repository<Tenant>,
     private readonly tenantDbService: TenantDbService,
+    private readonly usersService: UsersService,
   ) {}
 
   async create(createTenantDto: CreateTenantDto): Promise<Tenant> {
@@ -85,5 +89,14 @@ export class TenantsService {
   async remove(id: string): Promise<void> {
     const tenant = await this.findOne(id);
     await this.tenantsRepository.remove(tenant);
+  }
+
+  async createUser(id: string, createUserDto: CreateUserDto): Promise<User> {
+    const tenant = await this.findOne(id);
+    return await this.usersService.createForTenant(tenant.id, createUserDto);
+  }
+
+  async findAllUsers(id: string): Promise<User[]> {
+    return await this.usersService.findAllByTenantId(id);
   }
 }

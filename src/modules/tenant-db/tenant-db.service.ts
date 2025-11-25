@@ -40,18 +40,18 @@ export class TenantDbService {
   async createDataSource(tenant: Tenant): Promise<void> {    
     const dataSource = TenantDataSource;
 
-    const databasePrefix = dataSource.options.database;
+    const database = dataSource.options.database + tenant.id;
 
     dataSource.setOptions({
       database: 'postgres',
     });
 
     await dataSource.initialize();
-    await dataSource.query(`CREATE DATABASE ${tenant.id}`);
+    await dataSource.query(`CREATE DATABASE "${database}"`);
     await dataSource.destroy();
 
     dataSource.setOptions({
-      database: databasePrefix + tenant.id,
+      database,
     });
 
     await dataSource.initialize();
