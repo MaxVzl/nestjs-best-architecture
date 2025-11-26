@@ -2,15 +2,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
-import { EmailsService } from '../emails/emails.service';
 import { User } from '../users/entities/user.entity';
+import { EmailsQueueService } from '../queue/services/emails-queue.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly emailsService: EmailsService
+    private readonly emailsQueueService: EmailsQueueService
   ) {}
 
   async signIn(loginDto: SignInDto, request: Request) {
@@ -20,7 +20,20 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    await this.emailsService.sendSignInEmail(user, request);
+    await this.emailsQueueService.sendSignInEmail({
+      email: user.email,
+      loginDate: new Date().toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }),
+      loginTime: new Date().toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      // ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+    });
 
     return this.generateToken(user);
   }

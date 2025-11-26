@@ -27,8 +27,9 @@
     "migration:revert:tenant": "npm run typeorm migration:revert -- -d src/database/tenant/tenant.datasource.ts",
     "migration:run:tenant:all": "ts-node -r tsconfig-paths/register src/database/tenant/scripts/run-tenants-migrations.ts",
     "migration:revert:tenant:all": "ts-node -r tsconfig-paths/register src/database/tenant/scripts/revert-tenants-migrations.ts",
-    "workers:prod": "node dist/workers/workers",
-    "email:dev": "email dev --dir src/workers/modules/emails-queue/emails"
+    "queue:dev": "nest start --watch --entryFile modules/queue/queue",
+    "queue:prod": "node dist/modules/queue/queue",
+    "email:dev": "email dev --dir src/modules/emails/emails"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",

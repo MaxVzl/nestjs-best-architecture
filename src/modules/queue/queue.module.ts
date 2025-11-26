@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
-import { EmailsProcessor } from './modules/emails-queue/emails-queue.processor';
-import { EmailsQueueService } from './modules/emails-queue/emails-queue.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { emailConfig, redisConfig, validationSchema } from 'src/config';
-import { EmailsQueueModule } from './modules/emails-queue/emails-queue.module';
+import { EmailsProcessor } from './processors/emails-queue.processor';
+import { EmailsModule } from '../emails/emails.module';
+import { EmailsQueueService } from './services/emails-queue.service';
 
 @Module({
   imports: [
@@ -28,8 +28,12 @@ import { EmailsQueueModule } from './modules/emails-queue/emails-queue.module';
       }),
       inject: [ConfigService]
     }),
-    EmailsQueueModule
+    BullModule.registerQueue({
+      name: 'emails'
+    }),
+    EmailsModule
   ],
-  providers: [EmailsProcessor, EmailsQueueService]
+  providers: [EmailsProcessor, EmailsQueueService],
+  exports: [EmailsQueueService]
 })
-export class WorkersModule {}
+export class QueueModule {}

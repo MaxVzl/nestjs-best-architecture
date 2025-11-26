@@ -18,6 +18,7 @@ import { CurrentTenantInterceptor } from './modules/auth/interceptors/current-te
 import { BullModule } from '@nestjs/bullmq';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { TenantDbModule } from './modules/tenant-db/tenant-db.module';
+import { QueueModule } from './modules/queue/queue.module';
 
 @Module({
   imports: [
@@ -50,7 +51,7 @@ import { TenantDbModule } from './modules/tenant-db/tenant-db.module';
     TenantsModule,
     UsersModule,
     AuthModule, 
-    EmailsModule, ProfilesModule, TenantDbModule
+    EmailsModule, ProfilesModule, TenantDbModule, QueueModule
   ],
   controllers: [AppController],
   providers: [

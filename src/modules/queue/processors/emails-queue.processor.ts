@@ -1,12 +1,12 @@
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Job } from "bullmq";
-import { EmailsQueueService } from './emails-queue.service';
-import { SignInEmailDto } from "src/workers/modules/emails-queue/dto/sign-in-email.dto";
+import { SignInEmailDto } from "../../emails/dto/sign-in-email.dto";
+import { EmailsService } from "../../emails/emails.service";
 
 @Processor('emails')
 // @Processor('emails', { concurrency: 2 })
 export class EmailsProcessor extends WorkerHost {
-  constructor(private readonly emailsQueueService: EmailsQueueService) {
+  constructor(private readonly emailsService: EmailsService) {
     super();
   }
 
@@ -20,7 +20,7 @@ export class EmailsProcessor extends WorkerHost {
     }
 
     if (job.name === 'sign-in') {
-      await this.emailsQueueService.sendSignInEmail(job.data);
+      await this.emailsService.sendSignInEmail(job.data);
     } else {
       throw new Error(`Invalid job name: ${job.name}`);
     }

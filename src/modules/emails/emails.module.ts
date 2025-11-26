@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { EmailsService } from './emails.service';
-import { BullModule } from '@nestjs/bullmq';
 import { EmailsEvents } from './emails.events';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    BullModule.registerQueue({
-      name: 'emails'
+    MailerModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        ...configService.get('email'),
+      }),
+      inject: [ConfigService],
     }),
   ],
   providers: [EmailsService, EmailsEvents],
