@@ -3,8 +3,8 @@ import { BullModule } from '@nestjs/bullmq';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { emailConfig, redisConfig, validationSchema } from 'src/config';
 import { EmailsProcessor } from './processors/emails-queue.processor';
-import { EmailsModule } from '../emails/emails.module';
 import { EmailsQueueService } from './services/emails-queue.service';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -31,7 +31,12 @@ import { EmailsQueueService } from './services/emails-queue.service';
     BullModule.registerQueue({
       name: 'emails'
     }),
-    EmailsModule
+    MailerModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        ...configService.get('email'),
+      }),
+      inject: [ConfigService],
+    }),
   ],
   providers: [EmailsProcessor, EmailsQueueService],
   exports: [EmailsQueueService]

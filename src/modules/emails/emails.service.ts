@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
 import { render } from '@react-email/components';
 import React from 'react';
 import SignInEmail from './emails/sign-in.email';
 import { SignInEmailDto } from './dto/sign-in-email.dto';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Injectable()
 export class EmailsService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(@InjectQueue('emails') private emailQueue: Queue) {}
 
   async sendSignInEmail(signInEmailDto: SignInEmailDto) {
     const emailHtml = await render(React.createElement(SignInEmail, signInEmailDto));
 
-    await this.mailerService.sendMail({
+    await this.emailQueue.add('sign-in', {
       to: signInEmailDto.email,
       subject: 'Nouvelle connexion détectée sur votre compte SCR Info',
       html: emailHtml,

@@ -1,13 +1,12 @@
-import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
-import { Queue } from 'bullmq';
-import { SignInEmailDto } from 'src/modules/emails/dto/sign-in-email.dto';
+import { MailerService } from '@nestjs-modules/mailer';
+import { EmailDto } from '../dto/email.dto';
 
 @Injectable()
 export class EmailsQueueService {
-  constructor(@InjectQueue('emails') private emailQueue: Queue) {}
+  constructor(private readonly mailerService: MailerService) {}
 
-  async sendSignInEmail(signInEmailDto: SignInEmailDto) {
-    await this.emailQueue.add('sign-in', signInEmailDto);
+  async send(emailDto: EmailDto) {
+    await this.mailerService.sendMail(emailDto);
   }
 }

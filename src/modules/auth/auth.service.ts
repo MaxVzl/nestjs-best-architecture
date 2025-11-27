@@ -3,14 +3,14 @@ import { UsersService } from '../users/users.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
-import { EmailsQueueService } from '../queue/services/emails-queue.service';
+import { EmailsService } from '../emails/emails.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly emailsQueueService: EmailsQueueService
+    private readonly emailsService: EmailsService
   ) {}
 
   async signIn(loginDto: SignInDto, request: Request) {
@@ -20,7 +20,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    await this.emailsQueueService.sendSignInEmail({
+    await this.emailsService.sendSignInEmail({
       email: user.email,
       loginDate: new Date().toLocaleDateString('fr-FR', {
         day: 'numeric',

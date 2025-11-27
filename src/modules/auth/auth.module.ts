@@ -5,7 +5,7 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TenantsModule } from '../tenants/tenants.module';
-import { QueueModule } from '../queue/queue.module';
+import { EmailsModule } from '../emails/emails.module';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { QueueModule } from '../queue/queue.module';
       }),
     }),
     UsersModule,
-    QueueModule,
+    EmailsModule,
     TenantsModule
   ],
   controllers: [AuthController],
