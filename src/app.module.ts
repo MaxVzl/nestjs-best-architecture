@@ -5,16 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { appConfig, databaseConfig, jwtConfig, redisConfig, validationSchema } from './config';
 import { TenantsModule } from './modules/tenants/tenants.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Tenant } from './modules/tenants/entities/tenant.entity';
 import { UsersModule } from './modules/users/users.module';
-import { User } from './modules/users/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthGuard } from './modules/auth/guards/auth.guard';
-import { CurrentUserInterceptor } from './modules/auth/interceptors/current-user.interceptor';
-import { RolesGuard } from './modules/users/guards/roles.guard';
 import { EmailsModule } from './modules/emails/emails.module';
-import { CurrentTenantInterceptor } from './modules/auth/interceptors/current-tenant.interceptor';
 import { BullModule } from '@nestjs/bullmq';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { TenantDbModule } from './modules/tenant-db/tenant-db.module';
@@ -54,24 +47,6 @@ import { QueueModule } from './modules/queue/queue.module';
     EmailsModule, ProfilesModule, TenantDbModule, QueueModule
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CurrentUserInterceptor
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CurrentTenantInterceptor
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard
-    }
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

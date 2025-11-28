@@ -1,11 +1,15 @@
-import { Controller, Post, Body, Get, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from '../users/entities/user.entity';
+import { AuthGuard } from './guards/auth.guard';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 
 @Controller('auth')
+@UseGuards(AuthGuard)
+@UseInterceptors(CurrentUserInterceptor)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
