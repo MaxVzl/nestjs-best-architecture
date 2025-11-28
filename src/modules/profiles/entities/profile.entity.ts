@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('profiles')
 export class Profile {
@@ -7,4 +7,7 @@ export class Profile {
 
   @Column()
   name: string;
+
+  @Column('uuid', { name: 'user_id', unique: true, nullable: false })
+  userId: string;
 }

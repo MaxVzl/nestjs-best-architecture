@@ -1,6 +1,7 @@
 import AdminDataSource from "../../admin/admin.datasource";
 import { Tenant } from "src/modules/tenants/entities/tenant.entity";
 import TenantDataSource from "../tenant.datasource";
+import { DataSource } from "typeorm";
 
 async function runMigrationsForTenants() {
   console.log('🔍 Connecting to admin DB...');
@@ -14,20 +15,29 @@ async function runMigrationsForTenants() {
   for (const tenant of tenants) {
     console.log(`🚀 Running migrations for tenant ${tenant.name}...`);
 
-    try {
-      const tenantDataSource = TenantDataSource;
+    let tenantDataSource: DataSource | null = null;
 
-      tenantDataSource.setOptions({
-        database: tenantDataSource.options.database + tenant.id,
-      });
+    try {
+      tenantDataSource = new DataSource({
+        ...TenantDataSource.options,
+        database: TenantDataSource.options.database + tenant.id,
+      } as typeof TenantDataSource.options);
 
       await tenantDataSource.initialize();
+      
+      const pendingMigrations = await tenantDataSource.showMigrations();
+      console.log(`📋 ${pendingMigrations ? 'Pending' : 'No'} migrations for ${tenant.name}`);
+
       await tenantDataSource.runMigrations();
       console.log(`✅ Migrations complete for ${tenant.name}`);
 
       await tenantDataSource.destroy();
     } catch (err) {
       console.error(`❌ Failed migrations for ${tenant.name}:`, err.message);
+    } finally {
+      if (tenantDataSource?.isInitialized) {
+        await tenantDataSource.destroy();
+      }
     }
   }
 
