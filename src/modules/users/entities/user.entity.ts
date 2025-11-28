@@ -1,6 +1,7 @@
 import { Role } from "src/modules/users/enums/role.enum";
 import { Tenant } from "src/modules/tenants/entities/tenant.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Session } from "src/modules/sessions/entities/session.entity";
 
 @Entity('users')
 export class User {
@@ -20,4 +21,7 @@ export class User {
   @ManyToOne(() => Tenant, (tenant) => tenant.users)
   @JoinColumn({ name: 'tenant_id' })
   tenant: Tenant;
+
+  @OneToMany(() => Session, (session) => session.user)
+  sessions: Session[];
 }

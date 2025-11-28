@@ -12,6 +12,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { TenantDbModule } from './modules/tenant-db/tenant-db.module';
 import { QueueModule } from './modules/queue/queue.module';
+import { SessionsModule } from './modules/sessions/sessions.module';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { QueueModule } from './modules/queue/queue.module';
     TenantsModule,
     UsersModule,
     AuthModule, 
-    EmailsModule, ProfilesModule, TenantDbModule, QueueModule
+    EmailsModule, ProfilesModule, TenantDbModule, QueueModule, SessionsModule
   ],
   controllers: [AppController],
   providers: [AppService],

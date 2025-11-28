@@ -2,6 +2,7 @@ import { registerAs } from "@nestjs/config";
 import { Profile } from "src/modules/profiles/entities/profile.entity";
 import { Tenant } from "src/modules/tenants/entities/tenant.entity";
 import { User } from "src/modules/users/entities/user.entity";
+import { Session } from "src/modules/sessions/entities/session.entity";
 
 export default registerAs('database', () => ({
   // Base de données ADMIN (centrale)
@@ -14,7 +15,7 @@ export default registerAs('database', () => ({
     database: process.env.ADMIN_DB_NAME || 'admin_db',
     synchronize: false,
     logging: process.env.NODE_ENV === 'development',
-    entities: [Tenant, User],
+    entities: [Tenant, User, Session],
     migrations: ['dist/database/admin/migrations/**/*.js'],
   },
 

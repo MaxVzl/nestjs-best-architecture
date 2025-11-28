@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TenantsModule } from '../tenants/tenants.module';
 import { EmailsModule } from '../emails/emails.module';
+import { SessionsModule } from '../sessions/sessions.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { EmailsModule } from '../emails/emails.module';
     }),
     UsersModule,
     EmailsModule,
-    TenantsModule
+    TenantsModule,
+    SessionsModule
   ],
   controllers: [AuthController],
   providers: [AuthService]
