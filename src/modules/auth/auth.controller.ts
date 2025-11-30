@@ -6,10 +6,13 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from '../users/entities/user.entity';
 import { AuthGuard } from './guards/auth.guard';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { Session } from '../sessions/entities/session.entity';
+import { CurrentSession } from './decorators/current-session.decorator';
+import { CurrentSessionInterceptor } from './interceptors/current-session.interceptor';
 
 @Controller('auth')
 @UseGuards(AuthGuard)
-@UseInterceptors(CurrentUserInterceptor)
+@UseInterceptors(CurrentSessionInterceptor, CurrentUserInterceptor)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -25,7 +28,7 @@ export class AuthController {
   }
   
   @Get('refresh')
-  refresh(@CurrentUser() user: User) {
-    return this.authService.refresh(user);
+  refresh(@CurrentSession() session: Session) {
+    return this.authService.refresh(session);
   }
 }

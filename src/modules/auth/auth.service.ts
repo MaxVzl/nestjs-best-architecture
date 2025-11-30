@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
 import { EmailsService } from '../emails/emails.service';
 import { SessionsService } from '../sessions/sessions.service';
+import { Session } from '../sessions/entities/session.entity';
 
 @Injectable()
 export class AuthService {
@@ -39,15 +40,15 @@ export class AuthService {
       userAgent: request.headers['user-agent'],
     });
 
-    return this.generateToken(user);
+    return this.generateToken(session);
   }
 
-  async refresh(user: User) {
-    return this.generateToken(user);
+  async refresh(session: Session) {
+    return this.generateToken(session);
   }
 
-  private async generateToken(user: User) {
-    const payload = { sub: user.id, email: user.email, roles: user.roles };
+  private async generateToken(session: Session) {
+    const payload = { sub: session.token };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

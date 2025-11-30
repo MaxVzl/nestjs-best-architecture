@@ -80,6 +80,16 @@ export class UsersService {
     return await this.usersRepository.find({ where: { tenant: { id: tenantId } } });
   }
 
+  async findOneBySessionId(sessionId: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { sessions: { id: sessionId } } });
+
+    if (!user) {
+      throw new NotFoundException(`Utilisateur avec la session "${sessionId}" introuvable`);
+    }
+
+    return user;
+  }
+
   async createForTenant(tenantId: string, createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
