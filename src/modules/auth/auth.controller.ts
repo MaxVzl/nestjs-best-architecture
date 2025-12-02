@@ -15,7 +15,7 @@ import { CurrentSessionInterceptor } from './interceptors/current-session.interc
 @UseInterceptors(CurrentSessionInterceptor, CurrentUserInterceptor)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
+  
   @Public()
   @Post('login')
   signIn(@Body() loginDto: SignInDto, @Req() request: Request) {
