@@ -3,12 +3,12 @@ import { ProfilesService } from './profiles.service';
 import { Profile } from './entities/profile.entity';
 import { Tenant } from '../tenants/entities/tenant.entity';
 import { CurrentTenant } from '../auth/decorators/current-tenant.decorator';
-import { AuthGuard } from '../auth/guards/auth.guard';
 import { CurrentTenantInterceptor } from '../auth/interceptors/current-tenant.interceptor';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('profiles')
-@UseGuards(AuthGuard)
 @UseInterceptors(CurrentTenantInterceptor)
+@UseGuards(JwtAuthGuard)
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 

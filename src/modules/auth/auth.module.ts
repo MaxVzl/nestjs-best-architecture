@@ -7,6 +7,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TenantsModule } from '../tenants/tenants.module';
 import { EmailsModule } from '../emails/emails.module';
 import { SessionsModule } from '../sessions/sessions.module';
+import { PassportModule } from '@nestjs/passport';
+import { LocalStrategy } from './local.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -26,9 +29,10 @@ import { SessionsModule } from '../sessions/sessions.module';
     UsersModule,
     EmailsModule,
     TenantsModule,
-    SessionsModule
+    SessionsModule,
+    PassportModule
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService, LocalStrategy, JwtStrategy]
 })
 export class AuthModule {}
