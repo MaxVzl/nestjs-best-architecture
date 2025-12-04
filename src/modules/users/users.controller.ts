@@ -5,10 +5,10 @@ import { Role } from 'src/modules/users/enums/role.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RolesGuard } from './guards/roles.guard';
-import { AuthGuard } from '../auth/guards/auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('users')
-@UseGuards(AuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.Admin)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -17,7 +17,7 @@ export class UsersController {
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-
+  
   @Get()
   findAll() {
     return this.usersService.findAll();
