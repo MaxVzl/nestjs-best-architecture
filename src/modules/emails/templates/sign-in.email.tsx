@@ -1,6 +1,5 @@
 import {
   Body,
-  Button,
   Container,
   Head,
   Hr,
@@ -14,6 +13,8 @@ import {
   Column,
 } from '@react-email/components';
 import tailwindConfig from './tailwind.config';
+import { Button } from './components/button';
+import { Alert } from './components/alert';
 
 const TailwindWrapper = Tailwind as React.ComponentType<
   React.PropsWithChildren<{ config: typeof tailwindConfig }>
@@ -127,20 +128,13 @@ export const SignInEmail = ({
             </Row>
           </Section>
 
-          <Section className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <Text className="text-[14px] text-red-800 m-0">
-              <strong>Important :</strong> Si vous n'êtes pas à l'origine de cette connexion,
-              veuillez changer immédiatement votre mot de passe et nous contacter.
-            </Text>
-          </Section>
+          <Alert variant="danger">
+            <strong>Important :</strong> Si vous n'êtes pas à l'origine de cette connexion,
+            veuillez changer immédiatement votre mot de passe et nous contacter.
+          </Alert>
 
           <Section className="text-center mb-6">
-            <Button
-              className="bg-[#5F51E8] rounded-md text-white text-[16px] font-medium no-underline text-center px-6 py-3 inline-block"
-              href="https://www.scrinfo.net"
-            >
-              Accéder à mon compte
-            </Button>
+            <Button href="https://www.scrinfo.net">Accéder à mon compte</Button>
           </Section>
 
           <Hr className="border-gray-200 my-6" />

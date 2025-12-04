@@ -29,7 +29,7 @@
     "migration:revert:tenant:all": "node dist/database/tenant/scripts/revert-tenants-migrations.js",
     "queue:dev": "nest start --watch --entryFile modules/queue/queue",
     "queue:prod": "node dist/modules/queue/queue",
-    "email:dev": "email dev --dir src/modules/emails/emails"
+    "email:dev": "email dev --dir src/modules/emails/templates"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",

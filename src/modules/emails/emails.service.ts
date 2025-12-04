@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { render } from '@react-email/components';
 import React from 'react';
-import SignInEmail from './emails/sign-in.email';
+import SignInEmail from './templates/sign-in.email';
 import { SignInEmailDto } from './dto/sign-in-email.dto';
 import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
