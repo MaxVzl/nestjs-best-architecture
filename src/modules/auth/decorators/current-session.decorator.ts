@@ -4,6 +4,6 @@ import { Session } from 'src/modules/sessions/entities/session.entity';
 export const CurrentSession = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): Session => {
     const request = ctx.switchToHttp().getRequest();
-    return request.currentSession as Session;
+    return request.session as Session;
   },
 );

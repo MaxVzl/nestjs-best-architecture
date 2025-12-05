@@ -41,6 +41,16 @@ export class UsersService {
     return user;
   }
 
+  async findOneByTenantId(tenantId: string, id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { id, tenant: { id: tenantId } } });
+
+    if (!user) {
+      throw new NotFoundException(`Utilisateur avec l'ID "${id}" et le tenant "${tenantId}" introuvable`);
+    }
+
+    return user;
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
 
@@ -74,10 +84,6 @@ export class UsersService {
     }
 
     return user;
-  }
-
-  async findAllByTenantId(tenantId: string): Promise<User[]> {
-    return await this.usersRepository.find({ where: { tenant: { id: tenantId } } });
   }
 
   async findOneBySessionId(sessionId: string): Promise<User> {

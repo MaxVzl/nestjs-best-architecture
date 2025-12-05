@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ParseUUIDPipe, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import { TenantsService } from './tenants.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
@@ -8,7 +8,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RolesGuard } from '../users/guards/roles.guard';
 
-@Controller('tenants')
+@Controller('admin/tenants')
 @UseGuards(AuthGuard, RolesGuard)
 @Roles(Role.Admin)
 export class TenantsController {

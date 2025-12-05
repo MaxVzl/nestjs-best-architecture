@@ -16,12 +16,11 @@ export class User {
 
   @Column({ type: 'enum', enum: Role, array: true, default: [Role.User] })
   roles: Role[];
-
-  // @ManyToOne(() => Tenant, (tenant) => tenant.users, { eager: true })
-  @ManyToOne(() => Tenant, (tenant) => tenant.users)
+  
+  @ManyToOne(() => Tenant, (tenant) => tenant.users, { lazy: true })
   @JoinColumn({ name: 'tenant_id' })
   tenant: Tenant;
 
-  @OneToMany(() => Session, (session) => session.user)
+  @OneToMany(() => Session, (session) => session.user, { lazy: true })
   sessions: Session[];
 }

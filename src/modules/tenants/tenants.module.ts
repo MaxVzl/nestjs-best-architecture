@@ -4,11 +4,11 @@ import { TenantsController } from './tenants.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tenant } from './entities/tenant.entity';
 import { TenantDbService } from '../tenant-db/tenant-db.service';
-import { UsersModule } from '../users/users.module';
 import { SessionsModule } from '../sessions/sessions.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tenant]), UsersModule, SessionsModule],
+  imports: [TypeOrmModule.forFeature([Tenant]), SessionsModule, UsersModule],
   controllers: [TenantsController],
   providers: [TenantsService, TenantDbService],
   exports: [TenantsService]

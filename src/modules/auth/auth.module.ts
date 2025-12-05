@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TenantsModule } from '../tenants/tenants.module';
 import { EmailsModule } from '../emails/emails.module';
 import { SessionsModule } from '../sessions/sessions.module';
+import { AuthGuard } from './guards/auth.guard';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { SessionsModule } from '../sessions/sessions.module';
     SessionsModule
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService, AuthGuard],
+  exports: [AuthGuard]
 })
 export class AuthModule {}

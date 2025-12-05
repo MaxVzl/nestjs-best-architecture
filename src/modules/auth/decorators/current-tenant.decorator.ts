@@ -4,6 +4,6 @@ import { Tenant } from 'src/modules/tenants/entities/tenant.entity';
 export const CurrentTenant = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): Tenant => {
     const request = ctx.switchToHttp().getRequest();
-    return request.currentTenant as Tenant;
+    return request.tenant as Tenant;
   },
 );

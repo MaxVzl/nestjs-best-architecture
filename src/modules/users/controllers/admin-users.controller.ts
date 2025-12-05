@@ -1,16 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, ParseUUIDPipe } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { Roles } from 'src/modules/users/decorators/roles.decorator';
-import { Role } from 'src/modules/users/enums/role.enum';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { RolesGuard } from './guards/roles.guard';
-import { AuthGuard } from '../auth/guards/auth.guard';
+import { UsersService } from '../users.service';
+import { Roles } from '../decorators/roles.decorator';
+import { Role } from '../enums/role.enum';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { RolesGuard } from '../guards/roles.guard';
+import { AuthGuard } from '../../auth/guards/auth.guard';
 
-@Controller('users')
+@Controller('admin/users')
 @UseGuards(AuthGuard, RolesGuard)
 @Roles(Role.Admin)
-export class UsersController {
+export class AdminUsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
@@ -24,7 +24,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOne(id);
   }
 

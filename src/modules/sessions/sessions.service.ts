@@ -19,6 +19,17 @@ export class SessionsService {
     });
   }
 
+  async remove(session: Session): Promise<void> {
+    await this.sessionsRepository.remove(session);
+  }
+
+  async extend(session: Session): Promise<Session> {
+    return this.sessionsRepository.save({
+      ...session,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    });
+  }
+
   async findOneByToken(token: string): Promise<Session> {
     const session = await this.sessionsRepository.findOne({ where: { token } });
 

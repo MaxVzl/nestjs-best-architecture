@@ -17,7 +17,7 @@ export class AuthService {
   ) {}
 
   async signIn(loginDto: SignInDto, request: Request) {
-    const user = await this.usersService.findOneByEmail(loginDto.email);
+    const user = await this.usersService.findOneByEmail(loginDto.username);
 
     if (user.password !== loginDto.password) {
       throw new UnauthorizedException('Invalid credentials');
@@ -43,7 +43,12 @@ export class AuthService {
     return this.generateToken(session);
   }
 
+  async signOut(session: Session) {
+    return this.sessionsService.remove(session);
+  }
+
   async refresh(session: Session) {
+    session = await this.sessionsService.extend(session);
     return this.generateToken(session);
   }
 

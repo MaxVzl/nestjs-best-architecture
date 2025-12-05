@@ -3,13 +3,17 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../../modules/auth/decorators/public.decorator';
+import { SessionsService } from 'src/modules/sessions/sessions.service';
+import { UsersService } from 'src/modules/users/users.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly reflector: Reflector
+    private readonly reflector: Reflector,
+    private readonly sessionsService: SessionsService,
+    private readonly usersService: UsersService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -36,7 +40,13 @@ export class AuthGuard implements CanActivate {
       );
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      request['session'] = payload;
+      // request['session'] = payload;
+      const session = await this.sessionsService.findOneByToken(payload.sub);
+      const user = await this.usersService.findOneBySessionId(session.id);
+      const tenant = await user.tenant;
+      request['session'] = session;
+      request['user'] = user;
+      request['tenant'] = tenant;
     } catch {
       throw new UnauthorizedException();
     }
