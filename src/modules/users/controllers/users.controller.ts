@@ -11,7 +11,7 @@ export class UsersController {
 
   @Get()
   findAll(@CurrentTenant() tenant: Tenant) {
-    return tenant.users;
+    return this.usersService.findAllByTenantId(tenant.id);
   }
 
   @Get(':id')

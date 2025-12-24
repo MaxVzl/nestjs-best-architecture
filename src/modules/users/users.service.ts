@@ -41,6 +41,10 @@ export class UsersService {
     return user;
   }
 
+  async findAllByTenantId(tenantId: string): Promise<User[]> {
+    return await this.usersRepository.find({ where: { tenant: { id: tenantId } } });
+  }
+
   async findOneByTenantId(tenantId: string, id: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id, tenant: { id: tenantId } } });
 

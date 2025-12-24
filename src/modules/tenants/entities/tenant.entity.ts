@@ -9,6 +9,6 @@ export class Tenant {
   @Column({ unique: true })
   name: string;
   
-  @OneToMany(() => User, (user) => user.tenant, { lazy: true })
+  @OneToMany(() => User, (user) => user.tenant)
   users: User[];
 }

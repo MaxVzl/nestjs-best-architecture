@@ -17,10 +17,10 @@ export class User {
   @Column({ type: 'enum', enum: Role, array: true, default: [Role.User] })
   roles: Role[];
   
-  @ManyToOne(() => Tenant, (tenant) => tenant.users, { lazy: true })
+  @ManyToOne(() => Tenant, (tenant) => tenant.users)
   @JoinColumn({ name: 'tenant_id' })
   tenant: Tenant;
 
-  @OneToMany(() => Session, (session) => session.user, { lazy: true })
+  @OneToMany(() => Session, (session) => session.user)
   sessions: Session[];
 }

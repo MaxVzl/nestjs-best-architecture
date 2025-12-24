@@ -5,6 +5,7 @@ import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../../modules/auth/decorators/public.decorator';
 import { SessionsService } from 'src/modules/sessions/sessions.service';
 import { UsersService } from 'src/modules/users/users.service';
+import { TenantsService } from 'src/modules/tenants/tenants.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -13,7 +14,8 @@ export class AuthGuard implements CanActivate {
     private readonly configService: ConfigService,
     private readonly reflector: Reflector,
     private readonly sessionsService: SessionsService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly tenantsService: TenantsService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -43,10 +45,14 @@ export class AuthGuard implements CanActivate {
       // request['session'] = payload;
       const session = await this.sessionsService.findOneByToken(payload.sub);
       const user = await this.usersService.findOneBySessionId(session.id);
-      const tenant = await user.tenant;
       request['session'] = session;
       request['user'] = user;
-      request['tenant'] = tenant;
+      try {
+        const tenant = await this.tenantsService.findOneByUserId(user.id);
+        request['tenant'] = tenant;
+      } catch (error) {
+        request['tenant'] = null;
+      }
     } catch {
       throw new UnauthorizedException();
     }

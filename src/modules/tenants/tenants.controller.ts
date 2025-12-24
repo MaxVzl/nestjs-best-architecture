@@ -7,12 +7,16 @@ import { Role } from '../users/enums/role.enum';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RolesGuard } from '../users/guards/roles.guard';
+import { UsersService } from '../users/users.service';
 
 @Controller('admin/tenants')
 @UseGuards(AuthGuard, RolesGuard)
 @Roles(Role.Admin)
 export class TenantsController {
-  constructor(private readonly tenantsService: TenantsService) {}
+  constructor(
+    private readonly tenantsService: TenantsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post()
   create(@Body() createTenantDto: CreateTenantDto) {
@@ -40,12 +44,16 @@ export class TenantsController {
   }
 
   @Post(':id/users')
-  createUser(@Param('id', ParseUUIDPipe) id: string, @Body() createUserDto: CreateUserDto) {
-    return this.tenantsService.createUser(id, createUserDto);
+  async createUser(@Param('id', ParseUUIDPipe) id: string, @Body() createUserDto: CreateUserDto) {
+    await this.tenantsService.findOne(id);
+
+    return this.usersService.createForTenant(id, createUserDto);
   }
 
   @Get(':id/users')
-  findAllUsers(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tenantsService.findAllUsers(id);
+  async findAllUsers(@Param('id', ParseUUIDPipe) id: string) {
+    await this.tenantsService.findOne(id);
+    
+    return this.usersService.findAllByTenantId(id);
   }
 }
